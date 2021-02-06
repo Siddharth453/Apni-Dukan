@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+    <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/business-and-finance-1-4/130/14-512.png"/>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css">
+    <title>Sign Up - Apni Dukan</title>
+</head>
+<body>
+    <style>
+        *{
+            font-family: 'Lemon', cursive;
+        }
+        body{
+            background: url("https://png.pngtree.com/thumb_back/fh260/back_our/20190619/ourmid/pngtree-taobao-vector-creative-technology-online-shopping-illustration-computer-finger-poster-image_131803.jpg") no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        .container.register{
+            width: 400px;
+            border: 1px solid gray;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+    <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/" style="font-family: 'Lemon', cursive;">Home</a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="true">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav navbar-right mr-auto">
+                    <%if(!currentUser){%>
+                        <li><a href="/login" style="font-family: 'Lemon', cursive;">Login</a></li>
+                        <li>
+                            <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
+                        </li>
+                    <%}else{%>
+                        <% if (currentUser.isShopkeeper == false) { %>
+                            <li>
+                                <a href="/buyer/drafts/carts" style="font-family: 'Lemon', cursive;">Drafts</a>
+                            </li>
+                            <li>
+                                <a href="/buyer/posts/carts" style="font-family: 'Lemon', cursive;">Posted Carts</a>
+                            </li>
+                        <% } %>
+                        <li>
+                            <a href="" style="font-family: 'Lemon', cursive;">Signed in as <%=currentUser.username%></a>
+                        </li>
+                        <li>
+                            <a href="/logout" style="font-family: 'Lemon', cursive;">Logout</a>
+                        </li>
+                    <%}%>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <%if(!error.length == 0){%>
+        <div class="container">
+            <div class="alert alert-danger" role="alert">
+                <p><%=error%></p>
+            </div>
+        </div>
+    <%}%>
+    <hr>
+    <div class="container register" align="center">
+        <form action="/register" method="POST">
+            <h1>Sign Up</h1>
+            <hr>
+            <div class="left" align="left">
+                <label for="username">Username:</label>
+                <input class="form-control" type="text" autocomplete="off" placeholder="Username.." name="username" id="username"><br>
+                <label for="password">Password:</label>
+                <input class="form-control" minlength="8" type="password" placeholder="Password.." name="password" id="password"><br>
+                <label for="number">Phone Number:</label>
+                <input class="form-control" type="number" placeholder="Phone Number.." aria-describedby="phoneHelp" autocomplete="off" name="number" required id="number">
+                <small id="phoneHelp" class="form-text text-muted">Will be used in contacting by the shopkeeper.</small><br>
+                <label for="password">Fullname:</label>
+                <input class="form-control" type="text" placeholder="Fullname.." autocomplete="off" name="fullname" required id="password"><br>
+                <button class="btn btn-primary btn-lg btn-block">Sign Up</button>
+                <input type="checkbox" onclick="toggle()" id="showpassword" style="font-family:'Lemon', cursive;">
+                <label for="showpassword">Show Password</label><br>
+                <input type="checkbox" name="isShopkeeper" id="shopkeeper" style="font-family:'Lemon', cursive;">
+                <label for="shopkeeper">Shopkeeper</label>
+            </div>
+            <a href="/login" style="font-family:'Lemon', cursive;">Already have an account? Login</a>
+        </form>
+    </div>
+    <hr>
+    <script>
+		function toggle() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+              x.type = "text";
+            } else {
+              x.type = "password";
+            }
+     }
+	</script>
+</body>
+</html>
