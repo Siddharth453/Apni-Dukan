@@ -164,7 +164,7 @@
                     <p>Paid: <a href="/shopkeeper/orders/<%= grocery._id %>/paid"
                             class="btn btn-danger btn-sm"><b>No</b></a></p>
                     <% } %>
-                    <% if (grocery.isCompleted == false) { %>
+                    <% if (grocery.isCompleted == false && grocery.groceryBill != 0) { %>
                         <p>You should complete this order within <b><%= grocery.deliver %>!</b> </p>
                     <% } else { %>
                         <p>Your order is completed.</p>
