@@ -348,6 +348,32 @@ app.get('/shopkeeper/orders/:id/bill', isLoggedIn, (req, res) => {
 		});
 	}
 });
+app.get('/shopkeeper/orders/:id/deliver-time', isLoggedIn, (req, res) => {
+	if (req.user.isShopkeeper == false) {
+		res.redirect('/buyer');
+	} else {
+		Grocery.findById(req.params.id, (error, grocery) => {
+			if (error) throw error;
+			else {
+				res.render('deliverTime', { currentUser: req.user, grocery });
+			}
+		});
+	}
+});
+app.post('/shopkeeper/orders/:id/deliver-time', isLoggedIn, (req, res) => {
+	if (req.user.isShopkeeper == false) {
+		res.redirect('/buyer');
+	} else {
+		Grocery.findById(req.params.id, (error, grocery) => {
+			if (error) throw error;
+			else {
+				grocery.deliver = `${req.body.deliver}  ${req.body.deliverTime}`;
+				grocery.save();
+				res.redirect(`/shopkeeper/orders/${req.params.id}`);
+			}
+		});
+	}
+});
 app.post('/shopkeeper/orders/:id/bill', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper == false) {
 		res.redirect('/buyer');

@@ -107,8 +107,10 @@
                             <th>Grocery</th>
                             <th>Quantity</th>
                             <th>Unit</th>
+                            <% if (grocery.groceryBill != 0) { %>
                             <th>Rate</th>
                             <th>Price</th>
+                            <% } %>
                         </tr>
                         <% for( let i = 0; i < grocery.groceryName.length; i++ ) { %>
                         <tr>
@@ -121,31 +123,36 @@
                             <td>
                                 <p><%= grocery.groceryUnit[i] %></p>
                             </td>
+                            <% if (grocery.groceryBill != 0) { %>
                             <td>
-                                <p>&#8377; <%=parseInt(grocery.groceryBill[i]) /  parseInt(grocery.groceryQuantity[i])%> per <%= grocery.groceryUnit[i] %> </p>
+                                <p>&#8377; <%=parseInt(grocery.groceryBill[i]) /  parseInt(grocery.groceryQuantity[i])%>
+                                    per <%= grocery.groceryUnit[i] %> </p>
                             </td>
                             <td>
                                 <p>&#8377;<%=grocery.groceryBill[i] %></p>
                             </td>
+                            <% } %>
                         </tr>
                         <% } %>
+                        <% if (grocery.groceryBill != 0) { %>
                         <tr>
                             <td>
                                 <p>Total: </p>
                             </td>
                             <td>
-                                
+
                             </td>
                             <td>
-                                
+
                             </td>
                             <td>
-                                
+
                             </td>
                             <td>
                                 <p>&#8377;<%= total %></p>
                             </td>
                         </tr>
+                        <% } %>
                     </table>
                     <hr>
                     <h3>Status:</h3>
@@ -165,21 +172,31 @@
                             class="btn btn-danger btn-sm"><b>No</b></a></p>
                     <% } %>
                     <% if (grocery.isCompleted == false && grocery.groceryBill != 0) { %>
-                        <p>You should complete this order within <b><%= grocery.deliver %>!</b> </p>
+                    <p>You should complete this order within <b><%= grocery.deliver %>!</b> </p>
+                    <% } else if(grocery.isCompleted) { %>
+                    <p>Your order is completed.</p>
                     <% } else { %>
-                        <p>Your order is completed.</p>
-                    <% } %> 
+                    <p>You have to check the order!</p>
+                    <% } %>
                     <% if (grocery.groceryBill == 0) { %>
-                        <hr>
-                        <div align="left">
-                            <a type="button" href="/shopkeeper/orders/<%= grocery._id %>/bill"
-                                class="btn btn-success btn-lg btn-block"> Generate Bill</a>
-                        </div>
+                    <hr>
+                    <div align="left">
+                        <a type="button" href="/shopkeeper/orders/<%= grocery._id %>/bill"
+                            class="btn btn-success btn-lg btn-block"> Generate Bill</a>
+                    </div>
+                    <% } %>
+                    <% if (grocery.groceryBill != 0) { %>
+                    <hr>
+                    <div align="left">
+                        <a type="button" href="/shopkeeper/orders/<%= grocery._id %>/deliver-time"
+                            class="btn btn-success btn-lg btn-block"> Change Deliver time</a>
+                    </div>
                     <% } %>
                     <hr>
                     <h3>Call</h3>
                     <hr>
-                    <h4><a href="tel:<%= grocery.groceryUser.phone %> " class="btn btn-primary btn-lg btn-block">Call <%= grocery.groceryUser.fullname %> </a></h4>
+                    <h4><a href="tel:<%= grocery.groceryUser.phone %> " class="btn btn-primary btn-lg btn-block">Call
+                            <%= grocery.groceryUser.fullname %> </a></h4>
             </div>
 </body>
 

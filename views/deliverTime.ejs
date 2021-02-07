@@ -13,7 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css">
-    <title>Home - Apni Dukan</title>
+    <title>Change Deliver Time for order <%= grocery.cartTitle %>  - Apni Dukan</title>
 </head>
 <body>
     <style>
@@ -27,13 +27,11 @@
             -o-background-size: cover;
             background-size: cover;
         }
-        .jumbotron{
-            background-image: url('https://png.pngtree.com/thumb_back/fh260/back_our/20190625/ourmid/pngtree-simple-atmosphere-online-shopping-hand-closeup-background-poster-image_261322.jpg'); 
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            -o-background-size: cover;
-            background-size: cover;
-            color:white;
+        .draftInfo{
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            max-width: 1000px;
         }
     </style>
     <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
@@ -53,17 +51,15 @@
                             <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
                         </li>
                     <%}else{%>
-                        <% if (currentUser.isShopkeeper == false) { %>
-                            <li>
-                                <a href="/carts/new" style="font-family: 'Lemon', cursive;">New Cart</a>
-                            </li>
-                            <li>
-                                <a href="/buyer/drafts/carts" style="font-family: 'Lemon', cursive;">Drafts</a>
-                            </li>
-                            <li>
-                                <a href="/buyer/posts/carts" style="font-family: 'Lemon', cursive;">Posted Carts</a>
-                            </li>
-                        <% } %>
+                        <li>
+                            <a href="/shopkeeper/orders" style="font-family: 'Lemon', cursive;">Orders</a>
+                        </li>
+                        <li>
+                            <a href="/shopkeeper/orders/incomplete" style="font-family: 'Lemon', cursive;">Incomplete orders</a>
+                        </li>
+                        <li>
+                            <a href="/shopkeeper/orders/complete" style="font-family: 'Lemon', cursive;">Completed orders</a>
+                        </li>
                         <li>
                             <a href="" style="font-family: 'Lemon', cursive;">Signed in as <%=currentUser.username%></a>
                         </li>
@@ -75,20 +71,21 @@
             </div>
         </div>
     </nav>
-    <div class="jumbotron">
-        <div align="center">
-            <h1>Welcome!</h1>
-        </div>
+    <div class="draftInfo" align="center" style="background-color: white;">
+        <h1><%= grocery.cartTitle %></h1>
         <hr>
-        <p>
-            Apni Dukan is an application where you and your local shopkeeper can contact together, you can order your things easily and the shopkeeper can also check it easily.
-            The Shopkeeper could generate each order's bill easily and almost automatically and set a time to deliver.
-            both the shopkeeper and your's<br> data is secured by the application. Try it today, just click the Register Button to Sign Up!<br>
-            <div align="center">
-                <a href="/login"><button class="btn btn-primary btn-lg">Login</button></a>
-                <a href="/register"><button class="btn btn-primary btn-lg">Register</button></a>
-            </div>
-        </p>
-    </div>
+        <h3>Change Deliver Time:</h3><hr>
+        <form action="/shopkeeper/orders/<%= grocery.id %>/deliver-time" method="POST">
+            <label for="deliver">Deliver within:</label>
+            <input class="form-control" placeholder="Deliver within.." required value="0" id="deliver" type="number" name="deliver"><br>
+            <select class="form-control" name="deliverTime" required><br>
+                <option>Minutes</option>
+                <option>Hours</option>
+                <option>Days</option>
+            </select><br>
+            <button class="btn btn-success btn-lg btn-block">Change Deliver Time</button>
+        </form>
+        <hr>
+    </div>  
 </body>
 </html>

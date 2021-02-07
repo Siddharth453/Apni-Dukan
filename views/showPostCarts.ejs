@@ -32,6 +32,7 @@
             -o-background-size: cover;
             background-size: cover;
         }
+
         table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
@@ -101,9 +102,9 @@
                                 <th>Quantity</th>
                                 <th>Unit</th>
                                 <% if (grocery.groceryBill != 0) { %>
-                                    <th>Rate</th>
-                                    <th>Price</th>
-                                <% } %> 
+                                <th>Rate</th>
+                                <th>Price</th>
+                                <% } %>
                             </tr>
                             <% for( let i = 0; i < grocery.groceryName.length; i++ ) { %>
                             <tr>
@@ -117,44 +118,46 @@
                                     <p><%= grocery.groceryUnit[i] %></p>
                                 </td>
                                 <% if (grocery.groceryBill != 0) { %>
-                                    <td>
-                                        <p>&#8377;
-                                            <%=parseInt(grocery.groceryBill[i]) /  parseInt(grocery.groceryQuantity[i])%>
-                                            per <%= grocery.groceryUnit[i] %> </p>
-                                    </td>
-                                    <td>
-                                        <p>&#8377;<%=grocery.groceryBill[i] %></p>
-                                    </td>
+                                <td>
+                                    <p>&#8377;
+                                        <%=parseInt(grocery.groceryBill[i]) /  parseInt(grocery.groceryQuantity[i])%>
+                                        per <%= grocery.groceryUnit[i] %> </p>
+                                </td>
+                                <td>
+                                    <p>&#8377;<%=grocery.groceryBill[i] %></p>
+                                </td>
                                 <% } %>
                             </tr>
                             <% } %>
-                            <% if (grocery.groceryBill != 0) { %> 
-                                <tr>
-                                    <td>
-                                        <p>Total: </p>
-                                    </td>
-                                    <td>
-    
-                                    </td>
-                                    <td>
-    
-                                    </td>
-                                    <td>
-    
-                                    </td>
-                                    <td>
-                                        <p>&#8377;<%= total %></p>
-                                    </td>
-                                </tr>
+                            <% if (grocery.groceryBill != 0) { %>
+                            <tr>
+                                <td>
+                                    <p>Total: </p>
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+                                    <p>&#8377;<%= total %></p>
+                                </td>
+                            </tr>
                             <% } %>
                         </table>
                         <hr>
                         <h1>Status</h1>
                         <% if (grocery.isCompleted == false && grocery.groceryBill != 0) { %>
-                            <p>Your order will be delivered in <b><%= grocery.deliver %>*!</b> </p>
+                        <p>Your order will be delivered in <b><%= grocery.deliver %>*!</b> </p>
+                        <% } else if(grocery.isCompleted) { %>
+                        <p>Your order is completed.</p>
                         <% } else { %>
-                            <p>Your order is completed.</p>
-                        <% } %> 
+                        <p>Your order will be checked by the shopkeeper!</p>
+                        <% } %>
                         <hr>
                         <form style="display: inline;"
                             action="/buyer/posts/carts/<%= grocery._id%>/remove?_method=DELETE" method="POST">
