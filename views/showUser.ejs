@@ -13,7 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css">
-    <title>Home - Apni Dukan</title>
+    <title>User <%= user.fullname %>   | Apni Dukan</title>
 </head>
 <body>
     <style>
@@ -26,7 +26,11 @@
             -moz-background-size: cover;
             -o-background-size: cover;
             background-size: cover;
-            font-family: 'Lemon', cursive;
+        }
+        .draftInfo{
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
         }
     </style>
     <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
@@ -68,24 +72,13 @@
             </div>
         </div>
     </nav>
-    <h1 style="margin: 10px" align="center">Hi, <%= currentUser.fullname %> </h1>
-    <hr>
-    <div class="contaner" style="background-color: white; margin: 10px; padding: 10px; border-radius: 10px;">
-        <h2 style="margin: 10px" align="center">Introduction to Apni Dukan</h2><hr>
-        <p style="margin: 10px" align="center">Welcome to Apni Dukan!<br>
-            Here you can contact with your local shopkeeper and make orders.
-            Just By creating a cart and saving it as a draft, you can edit and remove it whenever you want.
-            When you are completed just click Post Cart and your cart is posted to the shopkeeper.
-            To create a new Cart click on the New Cart Button on the navigation bar.
-        </p>
-    </div><hr>
-    <div class="contaner" style="background-color: white; margin: 10px; padding: 10px; border-radius: 10px;">
-        <h2 style="margin: 10px" align="center">Links to start</h2><hr>
-        <p style="margin: 10px" align="center">
-            <a href="/carts/new" type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-shopping-cart"></span> Create new cart</a> 
-            <a href="/profile/me" type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-user"></span> See your profile</a>
-            <a href="/buyer/drafts/carts" type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-save"></span> Your Drafts</a>
-            <a href="/buyer/posts/carts" type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-saved"></span> Posted Carts</a>
-    </div><hr>
+    <div class="draftInfo" style="background-color: white;" align="center">
+        <h1><%= user.fullname %></h1>
+        <p><em style="color:#a1a1a1">#<%= user.id %></em></p>
+        <a href="tel:<%= user.phone %>" class="btn btn-primary btn-lg btn-block">Call <%= user.fullname %> </a>
+        <hr>
+        <p style="border: 1px solid #a1a1a1; padding: 10px; border-radius: 10px;">Username: <%= user.username %></p>
+        <a href="/users/<%= user.id %>/carts/new" class="btn btn-primary btn-lg btn-block">Create New Cart</a>
+    </div>
 </body>
 </html>

@@ -92,11 +92,43 @@ app.get('/buyer/drafts/carts/:id', isLoggedIn, (req, res) => {
 		});
 	}
 });
-app.get('/carts/new', isLoggedIn, (req, res) => {
+// app.get('/carts/new', isLoggedIn, (req, res) => {
+// 	if (req.user.isShopkeeper) {
+// 		res.redirect('/shopkeeper');
+// 	} else {
+// 		res.render('newCart', { currentUser: req.user });
+// 	}
+// });
+app.get('/shopkeepers', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper) {
 		res.redirect('/shopkeeper');
 	} else {
-		res.render('newCart', { currentUser: req.user });
+		User.find({ isShopkeeper: true }, (error, shopkeepers) => {
+			if (error) {
+				throw error;
+			} else res.render('shopkeepers', { currentUser: req.user, shopkeepers: shopkeepers });
+		});
+	}
+});
+app.get('/users/:id', isLoggedIn, (req, res) => {
+	if (req.user.isShopkeeper) {
+		res.redirect('/shopkeeper');
+	} else {
+		User.findById(req.params.id, (error, user) => {
+			if (error) {
+				req.flash('nouser', 'No User found with this ID!');
+				res.redirect('/shopkeepers');
+			} else {
+				res.render('showUser', { currentUser: req.user, user });
+			}
+		});
+	}
+});
+app.post('/users/id', isLoggedIn, (req, res) => {
+	if (req.user.isShopkeeper) {
+		res.redirect('/shopkeeper');
+	} else {
+		res.redirect(`/users/${req.body.id}`);
 	}
 });
 app.post('/draftCart', isLoggedIn, (req, res) => {

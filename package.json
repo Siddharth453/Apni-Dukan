@@ -1,7 +1,7 @@
 {
 	"name": "local-shopping-app",
-	"version": "1.0.0",
-	"description": "Local shopping app for Siddha Happyville",
+	"version": "1.0.1",
+	"description": "Apni Dukan is a Global Shopping App where you can contact your local shopkeeper and order thing from them!",
 	"main": "app.js",
 	"scripts": {
 		"start": "node app.js",
