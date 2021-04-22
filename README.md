@@ -22,4 +22,6 @@ B) __For Shopkeeper__:<br><br>
 6) You can make a call directly through your application to the customer.
 7) It will show you the Address where to deliver your customer's Order.
 
-II)
+II) 📖 Guides: <br><br>
+A) __For Buyer__:<br><br>
+1) <img href="https://user-images.githubusercontent.com/67679454/115693437-8c98dd80-a37d-11eb-8886-b040f39680db.png"><br>To create a Draft click on Create new Cart > *add your groceries* > Save as Draft. and to Post Apni Dukan > You Drafts > *choose your draft* > Post Cart > *choose you shopkeeper* > Confirm.
