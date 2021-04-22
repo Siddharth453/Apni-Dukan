@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+    <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/business-and-finance-1-4/130/14-512.png"/>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css">
+    <title>Create new cart | Apni Dukan</title>
+</head>
+<body>
+    <style>
+        *{
+            font-family: 'Lemon', cursive;
+        }
+        body{
+            background: url("https://png.pngtree.com/thumb_back/fh260/back_our/20190619/ourmid/pngtree-taobao-vector-creative-technology-online-shopping-illustration-computer-finger-poster-image_131803.jpg") no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        .container.new{
+            max-width: 500px;
+            padding: 10px;
+            background: white;
+            border: 1px solid gray;
+            border-radius: 10px;
+        }
+                /* Full-width input fields */
+                input[type=text],
+        input[type=password],
+        input[type=email] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+
+        /* Add a background color when the inputs get focus */
+        input[type=text]:focus,
+        input[type=password]:focus,
+        input[type=email]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Set a style for all buttons */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        button:hover {
+            opacity: 1;
+        }
+
+        /* Extra styles for the cancel button */
+        .cancelbtn {
+            padding: 14px 20px;
+            background-color: #f44336;
+        }
+
+        /* Float cancel and signup buttons and add an equal width */
+        .cancelbtn,
+        .signupbtn {
+            float: left;
+            width: 50%;
+        }
+
+        /* Add padding to container elements */
+        .container {
+            padding: 16px;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: #474e5dc4;
+            padding-top: 50px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto 15% auto;
+            /* 5% from the top, 15% from the bottom and centered */
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        /* Style the horizontal ruler */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* The Close Button (x) */
+        .close {
+            position: absolute;
+            right: 35px;
+            top: 15px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #f1f1f1;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #f44336;
+            cursor: pointer;
+        }
+
+        /* Clear floats */
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .menu {
+            display: none;
+            background-color: #c0bfbfcc;
+            width: auto;
+            float: right;
+            height: 40px;
+            margin-top: 0px;
+            padding: 10px;
+            margin-bottom: 0px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .menuContainer {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .menuContainer li {
+            list-style: none;
+        }
+
+        /* Change styles for cancel button and signup button on extra small screens */
+        @media screen and (max-width: 300px) {
+
+            .cancelbtn,
+            .signupbtn {
+                width: 100%;
+            }
+
+        }
+    </style>
+    <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/" style="font-family: 'Lemon', cursive;">Home</a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="true">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav navbar-right mr-auto">
+                    <%if(!currentUser){%>
+                        <li><a href="/login" style="font-family: 'Lemon', cursive;">Login</a></li>
+                        <li>
+                            <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
+                        </li>
+                    <%}else{%>
+                        <% if (currentUser.isShopkeeper == false) { %>
+                            <li>
+                                <a href="/carts/new" style="font-family: 'Lemon', cursive;">New Cart</a>
+                            </li>
+                            <li>
+                                <a href="/buyer/drafts/carts" style="font-family: 'Lemon', cursive;">Drafts</a>
+                            </li>
+                            <li>
+                                <a href="/buyer/posts/carts" style="font-family: 'Lemon', cursive;">Posted Carts</a>
+                            </li>
+                        <% } %>
+                        <li>
+                            <a href="" style="font-family: 'Lemon', cursive;">Signed in as <%=currentUser.username%></a>
+                        </li>
+                        <li>
+                            <a href="/logout" style="font-family: 'Lemon', cursive;">Logout</a>
+                        </li>
+                    <%}%>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <hr>
+    <div class="container new" align="center">
+        <form action="/buyer/post/carts/<%= id %>/ " method="POST">
+            <h1>Create new Cart</h1>
+            <hr>
+            <label style="font-family:'Lemon',cursive;">Cart Title:</label>
+            <input autocomplete="off" style="font-family:'Lemon',cursive;" type="text" class="form-control" name="cartTitle" placeholder="Cart Title.." required><br>
+            <label>Cart Description:</label>
+            <textarea placeholder="Cart Descripiton.." class="form-control" required name="cartDescription"></textarea><hr>
+            <div id="groceries">
+                <label style="font-family:'Lemon',cursive;">Grocery Name:</label>
+                <input autocomplete="off" style="font-family:'Lemon',cursive;" type="text" class="form-control" name="groceryName" placeholder="Grocery Name.." required><br>
+                <div class="col">
+                    <div class="col-lg-6">
+                        <label style="font-family:'Lemon',cursive;">Grocery Quantity:</label>
+                        <input autocomplete="off" style="font-family:'Lemon',cursive;" type="number" class="form-control" name="groceryQuantity" placeholder="Grocery Quantity.." required>
+                    </div>
+                    <div class="col-lg-6">
+                        <label style="font-family:'Lemon',cursive;">Grocery Unit:</label>
+                        <select autocomplete="off" style="font-family:'Lemon',cursive;" class="form-control" name="groceryUnit" required>
+                            <optgroup label="Mass">
+                                <option>KG(KiloGram)</option>
+                                <option>G(Gram)</option>
+                                <option>MG(MiliGram)</option>
+                            </optgroup>
+                            <optgroup label="Length">
+                                <option>KM(KiloMeter)</option>
+                                <option>M(Meter)</option>
+                                <option>CM(CentiMeter)</option>
+                                <option>MM(MiliMeter)</option>
+                            </optgroup>
+                            <optgroup label="Volume">
+                                <option>L(Litre)</option>
+                                <option>ML(MiliLitre)</option>
+                            </optgroup>
+                            <optgroup label="Other">
+                                <option>pks. (Packet(s))</option>
+                                <option>pcs. (Piece(s))</option>
+                            </optgroup>
+                        </select><br>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a href="#footer" style="font-family:'Lemon',cursive;" class="btn btn-success btn-lg" onclick="add()">
+                    Add Grocery	
+                </a><hr>
+                <a class="btn btn-success btn-lg" style="color: white" onclick="document.getElementById('id02').style.display='block';  document.getElementById('postCart').innerHTML='Do you want to post this cart to the shopkeeper?';">Post Cart</a>
+                <div id="id02" class="modal" align="center">
+                    <span onclick="document.getElementById('id02').style.display='none'" class="close"
+                        title="Close Modal">&times;</span>
+                        <div class="container" style="background-color: white; border-radius: 5px;">
+                            <h1>Post Cart?</h1>
+                            <p id="postCart"></p>
+                            <hr>
+                            <div class="clearfix">
+                                <button type="button"
+                                    onclick="document.getElementById('id02').style.display='none'"
+                                    class="cancelbtn">Cancel</button>
+                                <button type="submit" class="signupbtn">Post Cart</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <hr>
+    <footer id="footer"></footer>
+    <script>
+		function toggle() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+              x.type = "text";
+            } else {
+              x.type = "password";
+            }
+        }
+        function add(){
+            var divMain = document.createElement("div");
+            var labelName = document.createElement("label");
+            var inputName = document.createElement("input");
+            var groceryName = document.createTextNode("Grocery Name:");
+            var div = document.createElement("div");
+            var br = document.createElement("br");
+            labelName.appendChild(groceryName);
+            div.appendChild(labelName);
+            div.appendChild(inputName);
+            div.appendChild(br);
+            div.setAttribute('align', 'center');
+            inputName.setAttribute('class', 'form-control');
+            inputName.setAttribute('placeholder', 'Grocery Name..');
+            inputName.setAttribute('name', 'groceryName');
+            inputName.setAttribute('required', '');
+            inputName.setAttribute('autocomplete', 'off');
+            labelName.setAttribute("style", "font-family:'Lemon', cursive");
+            inputName.setAttribute("style", "font-family:'Lemon', cursive");
+            var labelQuantity = document.createElement("label");
+            var inputQuantity = document.createElement("input");
+            var groceryQuantity = document.createTextNode("Grocery Quantity:");
+            var divCol = document.createElement("div");
+            var divColLg6 = document.createElement("div");
+            labelQuantity.appendChild(groceryQuantity);
+            divColLg6.appendChild(labelQuantity)
+            divColLg6.appendChild(inputQuantity)
+            divCol.appendChild(divColLg6);
+            // divCol.appendChild(inputQuantity);
+            divCol.setAttribute('align', 'center');
+            divCol.setAttribute('class', 'Col');
+            divColLg6.setAttribute('class', 'col-lg-6');
+            inputQuantity.setAttribute('class', 'form-control');
+            inputQuantity.setAttribute('placeholder', 'Grocery Quantity..');
+            inputQuantity.setAttribute('name', 'groceryQuantity');
+            inputQuantity.setAttribute('type', 'number');
+            inputQuantity.setAttribute('required', '');
+            inputQuantity.setAttribute('autocomplete', 'off');
+            labelQuantity.setAttribute("style", "font-family:'Lemon', cursive");
+            inputQuantity.setAttribute("style", "font-family:'Lemon', cursive");
+
+            var labelUnit = document.createElement("label");
+            var inputUnit = document.createElement("select");
+            var optgroupUnit = document.createElement("optgroup");
+            var optgroupLength = document.createElement("optgroup");
+            var optgroupVolume = document.createElement("optgroup");
+            var optgroupOther = document.createElement("optgroup");
+            //Mass
+            var optionKG = document.createElement("option");
+            var optionG = document.createElement("option");
+            var optionMG = document.createElement("option");
+            //Length
+            var optionKM = document.createElement("option");
+            var optionM = document.createElement("option");
+            var optionCM = document.createElement("option");
+            var optionMM = document.createElement("option");
+            //Volume
+            var optionL = document.createElement("option");
+            var optionML = document.createElement("option");
+            //Other
+            var optionpks = document.createElement("option");
+            var optionpcs = document.createElement("option");
+
+            var groceryUnit = document.createTextNode("Grocery Unit:");
+            //Mass
+            var optionKGNode = document.createTextNode("KG(KiloGram)")
+            var optionGNode = document.createTextNode("G(Gram)")
+            var optionMGNode = document.createTextNode("MG(MiliGram)")
+            //Length
+            var optionKMNode = document.createTextNode("KM(KiloMeter)")
+            var optionMNode = document.createTextNode("M(Meter)")
+            var optionCMNode = document.createTextNode("CM(CentiMeter)")
+            var optionMMNode = document.createTextNode("MM(MiliMeter)")
+            //Volume
+            var optionLNode = document.createTextNode("L(Litre)")
+            var optionMLNode = document.createTextNode("ML(MiliLitre)")
+            //Other
+            var optionpksNode = document.createTextNode("pks. (Packet(s))")
+            var optionpcsNode = document.createTextNode("pcs. (Piece(s))")
+
+            var divCol1 = document.createElement("div");
+            var divColLg61 = document.createElement("div");
+            var br1 = document.createElement("br")
+            labelUnit.appendChild(groceryUnit);
+            divColLg61.appendChild(labelUnit)
+            divColLg61.appendChild(inputUnit)
+            divColLg61.appendChild(br1)
+            divCol1.appendChild(divColLg61);
+            // divCol.appendChild(inputUnit);
+            divCol1.setAttribute('align', 'center');
+            divCol1.setAttribute('class', 'Col');
+            divColLg61.setAttribute('class', 'col-lg-6');
+            inputUnit.setAttribute('class', 'form-control');
+            inputUnit.setAttribute('name', 'groceryUnit');
+            inputUnit.setAttribute('required', '');
+            inputUnit.setAttribute('autocomplete', 'off');
+            labelUnit.setAttribute("style", "font-family:'Lemon', cursive");
+            inputUnit.setAttribute("style", "font-family:'Lemon', cursive");
+            optgroupUnit.setAttribute('label', 'Mass')
+            optgroupLength.setAttribute('label', 'Length')
+            optgroupVolume.setAttribute('label', 'Volumn')
+            optgroupOther.setAttribute('label', 'Other')
+            //Mass
+            optionKG.appendChild(optionKGNode)
+            optionG.appendChild(optionGNode)
+            optionMG.appendChild(optionMGNode)
+            //Length
+            optionKM.appendChild(optionKMNode)
+            optionM.appendChild(optionMNode)
+            optionCM.appendChild(optionCMNode)
+            optionMM.appendChild(optionMMNode)
+            //Volume
+            optionL.appendChild(optionLNode)
+            optionML.appendChild(optionMLNode)
+            //Other
+            optionpcs.appendChild(optionpcsNode)
+            optionpks.appendChild(optionpksNode)
+            //Mass
+            optgroupUnit.appendChild(optionKG)
+            optgroupUnit.appendChild(optionG)
+            optgroupUnit.appendChild(optionMG)
+            //Length
+            optgroupLength.appendChild(optionKM)
+            optgroupLength.appendChild(optionM)
+            optgroupLength.appendChild(optionCM)
+            optgroupLength.appendChild(optionMM)
+            //Volume
+            optgroupVolume.appendChild(optionL)
+            optgroupVolume.appendChild(optionML)
+            //Other
+            optgroupOther.appendChild(optionpks)
+            optgroupOther.appendChild(optionpcs)
+
+            inputUnit.setAttribute("style", "font-family:'Lemon', cursive");
+            inputUnit.appendChild(optgroupUnit)
+            inputUnit.appendChild(optgroupLength)
+            inputUnit.appendChild(optgroupVolume)
+            inputUnit.appendChild(optgroupOther)
+    
+            var element = document.getElementById("groceries");
+            divMain.appendChild(div);
+            divMain.appendChild(divCol);
+            divMain.appendChild(divCol1);
+            element.appendChild(divMain)
+        }
+	</script>
+</body>
+</html>

@@ -7,10 +7,14 @@ const passportLocalMongoose = require('passport-local-mongoose'),
 	mongoose = require('mongoose'),
 	express = require('express'),
 	Grocery = require('./models/grocery'),
+	stripe = require('stripe')(process.env.SECRET_KEY),
 	flash = require('connect-flash'),
 	Draft = require('./models/draft'),
 	User = require('./models/user'),
+	sgMail = require('@sendgrid/mail'),
 	app = express();
+const sendgridAPIKey = process.env.SENDGRID_API_KEY;
+sgMail.setApiKey(sendgridAPIKey);
 
 //APP CONFIGURATION
 const port = process.env.PORT;
@@ -35,7 +39,6 @@ app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
 //ROUTES
 app.get('/', (req, res) => {
 	if (req.user) {
@@ -55,7 +58,15 @@ app.get('/shopkeeper', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper == false) {
 		res.redirect('/buyer');
 	} else {
-		res.render('shopkeeper', { currentUser: req.user });
+		User.findById(req.user.id).populate('grocery').exec((error, user) => {
+			if (error) throw error;
+			else {
+				res.render('shopkeeper', {
+					currentUser: req.user,
+					user: user
+				});
+			}
+		});
 	}
 });
 //Buyer
@@ -74,10 +85,58 @@ app.get('/buyer/drafts/carts', isLoggedIn, (req, res) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('draftCarts', { drafts: drafts, currentUser: req.user });
+				res.render('draftCarts', { drafts: drafts.reverse(), currentUser: req.user });
 			}
 		});
 	}
+});
+app.post('/updatepin', isLoggedIn, (req, res) => {
+	const updateUser = {
+		pin: req.body.pin
+	};
+	User.findByIdAndUpdate(req.user.id, updateUser, (error, updatedUser) => {
+		if (error) {
+			console.log(error);
+		} else {
+			if (updatedUser.id == req.user.id) {
+				res.redirect(`/profile/me`);
+			} else {
+				res.redirect(`/buyer`);
+			}
+		}
+	});
+});
+app.post('/updateaddress', isLoggedIn, (req, res) => {
+	const updateUser = {
+		address: req.body.address
+	};
+	User.findByIdAndUpdate(req.user.id, updateUser, (error, updatedUser) => {
+		if (error) {
+			console.log(error);
+		} else {
+			if (updatedUser.id == req.user.id) {
+				res.redirect(`/profile/me`);
+			} else {
+				res.redirect(`/buyer`);
+			}
+		}
+	});
+});
+app.post('/updatecountry', isLoggedIn, (req, res) => {
+	const updateUser = {
+		country: req.body.country
+	};
+	User.findByIdAndUpdate(req.user.id, updateUser, (error, updatedUser) => {
+		if (error) {
+			console.log(error);
+		} else {
+			if (updatedUser.id == req.user.id) {
+				res.redirect(`/profile/me`);
+			} else {
+				res.redirect(`/buyer`);
+			}
+		}
+	});
 });
 app.get('/buyer/drafts/carts/:id', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper) {
@@ -87,25 +146,25 @@ app.get('/buyer/drafts/carts/:id', isLoggedIn, (req, res) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('showCarts', { drafts: drafts, currentUser: req.user });
+				res.render('showCarts', { drafts: drafts, currentUser: req.user, error: req.flash('nouserfound') });
 			}
 		});
 	}
 });
-// app.get('/carts/new', isLoggedIn, (req, res) => {
-// 	if (req.user.isShopkeeper) {
-// 		res.redirect('/shopkeeper');
-// 	} else {
-// 		res.render('newCart', { currentUser: req.user });
-// 	}
-// });
+app.get('/carts/new', isLoggedIn, (req, res) => {
+	if (req.user.isShopkeeper) {
+		res.redirect('/shopkeeper');
+	} else {
+		res.render('newCart', { currentUser: req.user });
+	}
+});
 app.get('/shopkeepers', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper) {
 		res.redirect('/shopkeeper');
 	} else {
-		User.find({ isShopkeeper: true }, (error, shopkeepers) => {
+		User.find({ isShopkeeper: true, pin: req.user.pin, country: req.user.country }, (error, shopkeepers) => {
 			if (error) {
-				throw error;
+				res.redirect('/shopkeepers');
 			} else res.render('shopkeepers', { currentUser: req.user, shopkeepers: shopkeepers });
 		});
 	}
@@ -114,7 +173,7 @@ app.get('/users/:id', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper) {
 		res.redirect('/shopkeeper');
 	} else {
-		User.findById(req.params.id, (error, user) => {
+		User.findById(req.params.id).populate('grocery').exec((error, user) => {
 			if (error) {
 				req.flash('nouser', 'No User found with this ID!');
 				res.redirect('/shopkeepers');
@@ -122,6 +181,13 @@ app.get('/users/:id', isLoggedIn, (req, res) => {
 				res.render('showUser', { currentUser: req.user, user });
 			}
 		});
+	}
+});
+app.get('/users/:id/carts/new', isLoggedIn, (req, res) => {
+	if (req.user.isShopkeeper) {
+		res.redirect('/shopkeeper');
+	} else {
+		res.render('userCart', { currentUser: req.user, id: req.params.id });
 	}
 });
 app.post('/users/id', isLoggedIn, (req, res) => {
@@ -152,42 +218,121 @@ app.post('/draftCart', isLoggedIn, (req, res) => {
 		}
 	});
 });
-app.post('/buyer/posts/carts/:id', isLoggedIn, (req, res) => {
+app.post('/buyer/posts/carts/:id/chooseuser', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper) {
 		res.redirect('/shopkeeper');
 	} else {
-		Draft.findById(req.params.id, (error, drafts) => {
+		User.find({ isShopkeeper: true, pin: req.user.pin, country: req.user.country }, (error, shopkeepers) => {
+			if (error) res.redirect('shopkeepers');
+			else {
+				res.render('chooseShopkeeper', { currentUser: req.user, shopkeepers, id: req.params.id });
+			}
+		});
+	}
+});
+app.post('/buyer/posts/carts/:groceryid/:userid', isLoggedIn, (req, res) => {
+	User.findById(req.params.userid, (error, user) => {
+		if (error) {
+			req.flash('nouserfound', 'Operation was cancelled because no user exists with this ID!');
+			res.redirect(`/buyer/drafts/carts/${req.params.groceryid}`);
+		} else {
+			Draft.findById(req.params.groceryid, (error, drafts) => {
+				if (error) {
+					req.flash('nouserfound', 'Operation was cancelled because no user exists with this ID!');
+					res.redirect(`/buyer/drafts/carts/${req.params.groceryid}`);
+				} else {
+					var newInfo = {
+						cartTitle: drafts.cartTitle,
+						cartDescription: drafts.cartDescription,
+						groceryUser: drafts.groceryUser,
+						groceryName: drafts.groceryName,
+						groceryQuantity: drafts.groceryQuantity,
+						groceryUnit: drafts.groceryUnit,
+						groceryShopkeeper: req.params.userid
+					};
+					Grocery.create(newInfo, (error, newGrocery) => {
+						if (error) {
+							req.flash('nouserfound', 'Operation was cancelled because no user exists with this ID!');
+							res.redirect(`/buyer/drafts/carts/${req.params.groceryid}`);
+						} else {
+							user.grocery.push(newGrocery);
+							user.save();
+							newGrocery.groceryUser.id = req.user.id;
+							newGrocery.groceryUser.fullname = req.user.fullname;
+							newGrocery.groceryUser.phone = req.user.phone;
+							newGrocery.groceryUser.email = req.user.email;
+							newGrocery.groceryUser.address = req.user.address;
+							newGrocery.groceryUser.country = req.user.country;
+							newGrocery.groceryUser.pin = req.user.pin;
+							newGrocery.save();
+							const msg = {
+								to: user.email,
+								from: 'apnidukan132@gmail.com',
+								subject: 'Notification | Apni Dukan',
+								text: `Hi ${user.fullname},
+									  ${newGrocery.groceryUser.fullname} has ordered a new cart to you. Check it to deliver it.
+									  Go to https://${req.headers.host}/shopkeeper/orders/${newGrocery.id}
+								`,
+								html: `
+									<h1>Hi ${user.fullname},</h1>
+										<p>${newGrocery.groceryUser.fullname} has ordered a new cart to you. Check it to deliver it.</p>
+										<a href="https://${req.headers.host}/shopkeeper/orders/${newGrocery.id}">Go to https://${req.headers
+									.host}/shopkeeper/orders/${newGrocery.id}.</a>
+								`
+							};
+							sgMail.send(msg);
+							res.redirect('/buyer/posts/carts');
+						}
+					});
+					Draft.findByIdAndRemove(req.params.groceryid, (error, removeDraft) => {
+						if (req.user.isShopkeeper) {
+							if (error) {
+								req.flash(
+									'nouserfound',
+									'Operation was cancelled because no user exists with this ID!'
+								);
+								res.redirect(`/buyer/drafts/carts/${req.params.groceryid}`);
+							} else {
+								if (removeDraft.groceryUser.id == req.user.id) {
+									res.redirect('/draft');
+								}
+							}
+						}
+					});
+				}
+			});
+		}
+	});
+});
+app.post('/buyer/post/carts/:id/', isLoggedIn, (req, res) => {
+	if (req.user.isShopkeeper) {
+		res.redirect('/buyer');
+	} else {
+		User.findById(req.params.id, (error, user) => {
 			if (error) {
 				console.log(error);
+				res.redirect('/buyer');
 			} else {
 				var newInfo = {
-					cartTitle: drafts.cartTitle,
-					cartDescription: drafts.cartDescription,
-					groceryUser: drafts.groceryUser,
-					groceryName: drafts.groceryName,
-					groceryQuantity: drafts.groceryQuantity,
-					groceryUnit: drafts.groceryUnit
+					cartTitle: req.body.cartTitle,
+					cartDescription: req.body.cartDescription,
+					groceryUser: req.body.groceryUser,
+					groceryName: req.body.groceryName,
+					groceryQuantity: req.body.groceryQuantity,
+					groceryUnit: req.body.groceryUnit,
+					groceryShopkeeper: req.params.userid
 				};
-				Grocery.create(newInfo, (error, newPost) => {
+				Grocery.create(newInfo, (error, newGrocery) => {
 					if (error) {
 						console.log(error);
 					} else {
-						newPost.groceryUser.id = req.user.id;
-						newPost.groceryUser.fullname = req.user.fullname;
-						newPost.groceryUser.phone = req.user.phone;
-						newPost.save();
+						user.grocery.push(newGrocery);
+						user.save();
+						newGrocery.groceryUser.id = req.user.id;
+						newGrocery.groceryUser.fullname = req.user.fullname;
+						newGrocery.groceryUser.phone = req.user.phone;
+						newGrocery.save();
 						res.redirect('/buyer/posts/carts');
-					}
-				});
-				Draft.findByIdAndRemove(req.params.id, (error, removeDraft) => {
-					if (req.user.isShopkeeper) {
-						if (error) {
-							console.log(error);
-						} else {
-							if (removeDraft.groceryUser.id == req.user.id) {
-								res.redirect('/draft');
-							}
-						}
 					}
 				});
 			}
@@ -202,7 +347,7 @@ app.get('/buyer/posts/carts', isLoggedIn, (req, res) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('postCarts', { currentUser: req.user, posted: postedCarts });
+				res.render('postCarts', { currentUser: req.user, posted: postedCarts.reverse() });
 			}
 		});
 	}
@@ -306,9 +451,9 @@ app.get('/shopkeeper/orders', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper == false) {
 		res.redirect('/buyer');
 	} else {
-		Grocery.find({}, (error, groceries) => {
+		User.findById(req.user.id).populate('grocery').exec((error, user) => {
 			if (error) throw error;
-			else res.render('order', { currentUser: req.user, grocery: groceries.reverse() });
+			else res.render('order', { currentUser: req.user, grocery: user });
 		});
 	}
 });
@@ -363,6 +508,23 @@ app.get('/shopkeeper/orders/:id/complete', isLoggedIn, (req, res) => {
 			else {
 				grocery.isCompleted = true;
 				grocery.save();
+				const msg = {
+					to: grocery.groceryUser.email,
+					from: 'apnidukan132@gmail.com',
+					subject: 'Notification | Apni Dukan',
+					text: `Hi ${grocery.groceryUser.fullname},
+									  Your order #${req.params.id} has been delivered, please check.
+									  Go to https://${req.headers.host}/buyer/posts/carts/${grocery.id}
+								`,
+					html: `
+									<h1>Hi ${grocery.groceryUser.fullname},</h1>
+										<p>Your order #${req.params.id} has been delivered, please check.</p>
+										<a href="https://${req.headers.host}/buyer/posts/carts/${grocery.id}">Go to https://${req.headers
+						.host}/buyer/posts/carts/${grocery.id}.</a>
+								`
+				};
+				sgMail.send(msg);
+				console.log(msg);
 				res.redirect(`/shopkeeper/orders/${req.params.id}`);
 			}
 		});
@@ -401,6 +563,24 @@ app.post('/shopkeeper/orders/:id/deliver-time', isLoggedIn, (req, res) => {
 			else {
 				grocery.deliver = `${req.body.deliver}  ${req.body.deliverTime}`;
 				grocery.save();
+				const msg = {
+					to: grocery.groceryUser.email,
+					from: 'apnidukan132@gmail.com',
+					subject: 'Notification | Apni Dukan',
+					text: `Hi ${grocery.groceryUser.fullname},
+				  The Delivery time of order #${req.params.id} has been changed to ${req.body.deliver}  ${req.body
+						.deliverTime}, please check.
+				  Go to https://${req.headers.host}/buyer/posts/carts/${grocery.id}
+			`,
+					html: `
+				<h1>Hi ${grocery.groceryUser.fullname},</h1>
+					<p>The Delivery time of order <b style="color: #a1a1a1"><em>#${req.params.id}</em></b> has been changed to ${req
+						.body.deliver}  ${req.body.deliverTime}, please check.</p>
+					<a href="https://${req.headers.host}/buyer/posts/carts/${grocery.id}">Go to https://${req.headers
+						.host}/buyer/posts/carts/${grocery.id}.</a>
+			`
+				};
+				sgMail.send(msg);
 				res.redirect(`/shopkeeper/orders/${req.params.id}`);
 			}
 		});
@@ -416,6 +596,22 @@ app.post('/shopkeeper/orders/:id/bill', isLoggedIn, (req, res) => {
 				grocery.groceryBill = req.body.groceryBill;
 				grocery.deliver = `${req.body.deliver}  ${req.body.deliverTime}`;
 				grocery.save();
+				const msg = {
+					to: grocery.groceryUser.email,
+					from: 'apnidukan132@gmail.com',
+					subject: 'Notification | Apni Dukan',
+					text: `Hi ${grocery.groceryUser.fullname},
+				 The bill of order #${req.params.id} has been generated, please Check.
+				  Go to https://${req.headers.host}/buyer/posts/carts/${grocery.id}
+			`,
+					html: `
+				<h1>Hi ${grocery.groceryUser.fullname},</h1>
+					<p> The bill of order <b style="color:#a1a1a1"><em>#${req.params.id}</em></b> has been generated, please Check.</p>
+					<a href="https://${req.headers.host}/buyer/posts/carts/${grocery.id}">Go to https://${req.headers
+						.host}/buyer/posts/carts/${grocery.id}.</a>. To check the bill.
+			`
+				};
+				sgMail.send(msg);
 				res.redirect(`/shopkeeper/orders/${req.params.id}`);
 			}
 		});
@@ -425,10 +621,10 @@ app.get('/shopkeeper/orders/incomplete', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper == false) {
 		res.redirect('/buyer');
 	} else {
-		Grocery.find({ isCompleted: false }, (error, grocery) => {
+		User.findById(req.user.id).populate('grocery').exec((error, user) => {
 			if (error) throw error;
 			else {
-				res.render('order', { currentUser: req.user, grocery: grocery.reverse() });
+				res.render('incomplete', { currentUser: req.user, grocery: user });
 			}
 		});
 	}
@@ -437,10 +633,10 @@ app.get('/shopkeeper/orders/complete', isLoggedIn, (req, res) => {
 	if (req.user.isShopkeeper == false) {
 		res.redirect('/buyer');
 	} else {
-		Grocery.find({ isCompleted: true }, (error, grocery) => {
+		User.findById(req.user.id).populate('grocery').exec((error, user) => {
 			if (error) throw error;
 			else {
-				res.render('order', { currentUser: req.user, grocery: grocery.reverse() });
+				res.render('complete', { currentUser: req.user, grocery: user });
 			}
 		});
 	}
@@ -463,6 +659,83 @@ app.get('/shopkeeper/orders/:id', isLoggedIn, (req, res) => {
 		});
 	}
 });
+//PAYMENT
+app.get('/payment', isLoggedIn, (req, res) => {
+	// res.render('payment', {
+	// 	key: process.env.PUBLISHABLE_KEY,
+	// 	currentUser: req.user
+	// });
+	res.redirect('/shopkeeper');
+});
+app.post('/payment', (req, res) => {
+	// stripe.customers
+	// 	.create({
+	// 		email: req.body.stripeEmail,
+	// 		source: req.body.stripeToken,
+	// 		name: 'Apni Dukan'
+	// 	})
+	// 	.then((customer) => {
+	// 		return stripe.charges.create({
+	// 			amount: 100000,
+	// 			description: 'Buy Apni Dukan to reactivate your account',
+	// 			currency: 'INR',
+	// 			customer: customer.id
+	// 		});
+	// 	})
+	// 	.then((charge) => {
+	// 		req.user.isPaid = true;
+	// 		req.user.save();
+	// 		console.log(charge);
+	// 		res.redirect('/');
+	// 	})
+	// 	.catch((err) => {
+	// 		res.send(err);
+	// 	});
+	res.redirect('/shopkeeper');
+});
+//CONTACT
+app.get('/contact', (req, res) => {
+	res.render('contact', { currentUser: req.user, success: req.flash('contact') });
+});
+app.post('/contact', (req, res) => {
+	const msg = {
+		to: 'apnidukan132@gmail.com',
+		from: 'apnidukan132@gmail.com',
+		subject: `Email from ${req.body.name} | Apni Dukan`,
+		text: `Hi Apni Dukan Owner,
+			   ${req.body.name} wants a help from you, his/her message is below.
+			   "Hi Apni Dukan Owner,
+			   ${req.body.message}"
+
+			   From:
+			   ${req.body.name}(${req.body.email})
+                  
+			   To:
+			   Apni Dukan Owner(apnidukan132@gmail.com) 
+					`,
+		html: `
+		<h1>Hi Apni Dukan Owner,</h1>
+		<p>${req.body.name} wants a help from you, his/her message is below.</p>
+		<div class="container" align="center">
+		<b><em><h1>Hi Apni Dukan Owner,</h1>
+		<h3>${req.body.message}</h3></em></b>
+		</div><br>
+        <div class="container">
+		<p>From:</p>
+		<p>${req.body.name}(${req.body.email})</p>
+		   
+		<p>To:</p>
+		<p>Apni Dukan Owner(apnidukan132@gmail.com)</p>
+		</div>	
+					`
+	};
+	sgMail.send(msg);
+	req.flash(
+		'contact',
+		`We have got your email and will respond you as soon as possible to the email ${req.body.email}.`
+	);
+	res.redirect('/contact');
+});
 //Auth Routes
 // show register form
 app.get('/register', function(req, res) {
@@ -480,7 +753,11 @@ app.post('/register', function(req, res) {
 		username: req.body.username,
 		fullname: req.body.fullname,
 		isShopkeeper: shopkeeper,
-		phone: req.body.number
+		phone: req.body.number,
+		address: req.body.address,
+		country: req.body.country,
+		pin: req.body.pin,
+		email: req.body.email
 	});
 	User.register(newUser, req.body.password, function(err, user) {
 		if (err) {

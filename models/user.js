@@ -6,7 +6,18 @@ const UserSchema = new mongoose.Schema({
 	password: String,
 	isShopkeeper: { type: Boolean, default: false },
 	fullname: String,
-	phone: String
+	phone: String,
+	grocery: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Grocery'
+		}
+	],
+	isPaid: { type: Boolean, default: false },
+	address: String,
+	country: String,
+	pin: String,
+	email: String
 });
 UserSchema.plugin(passportLocalMongoose);
 module.exports = mongoose.model('User', UserSchema);

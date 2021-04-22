@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+    <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/business-and-finance-1-4/130/14-512.png" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+    <link rel="stylesheet" type="text/css">
+    <title>Pay ₹ 1000.00 to reactivate your account</title>
+</head>
+
+<body>
+    <style>
+        * {
+            font-family: 'Lemon', cursive;
+        }
+
+        html {
+            font-family: 'Lemon', cursive;
+        }
+
+        body {
+            background: url("https://png.pngtree.com/thumb_back/fh260/back_our/20190619/ourmid/pngtree-taobao-vector-creative-technology-online-shopping-illustration-computer-finger-poster-image_131803.jpg") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            font-family: 'Lemon', cursive;
+        }
+
+        .jumbotron {
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/back_our/20190625/ourmid/pngtree-simple-atmosphere-online-shopping-hand-closeup-background-poster-image_261322.jpg');
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Lemon', cursive;
+        }
+
+        .button-purchase {
+            background-color: #3399ff;
+            border: 0;
+            font-family: 'Lemon', cursive;
+            width: 100%;
+            height: 50px;
+        }
+
+        .button-purchase:hover {
+            background-color: #036ed88c;
+            border: 0;
+            font-family: 'Lemon', cursive;
+        }
+    </style>
+    <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/" style="font-family: 'Lemon', cursive;">Home</a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="true">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav navbar-right mr-auto">
+                    <%if(!currentUser){%>
+                    <li><a href="/login" style="font-family: 'Lemon', cursive;">Login</a></li>
+                    <li>
+                        <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
+                    </li>
+                    <%}else{%>
+                    <% if (currentUser.isShopkeeper == false) { %>
+                    <li>
+                        <a href="/carts/new" style="font-family: 'Lemon', cursive;">New Cart</a>
+                    </li>
+                    <li>
+                        <a href="/buyer/drafts/carts" style="font-family: 'Lemon', cursive;">Drafts</a>
+                    </li>
+                    <li>
+                        <a href="/buyer/posts/carts" style="font-family: 'Lemon', cursive;">Posted Carts</a>
+                    </li>
+                    <% } %>
+                    <li>
+                        <a href="" style="font-family: 'Lemon', cursive;">Signed in as <%=currentUser.username%></a>
+                    </li>
+                    <li>
+                        <a href="/logout" style="font-family: 'Lemon', cursive;">Logout</a>
+                    </li>
+                    <%}%>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div align="center">
+        <h1>Pay ₹1000.00 to reactivate your Apni Dukan Account</h1>
+        <hr>
+                    <div id="container" style="width: 100%; height: 50px;"></div>
+
+                    <script>
+                        /**
+                         * Define the version of the Google Pay API referenced when creating your
+                         * configuration
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|apiVersion in PaymentDataRequest}
+                         */
+                        const baseRequest = {
+                            apiVersion: 2,
+                            apiVersionMinor: 0
+                        };
+
+                        /**
+                         * Card networks supported by your site and your gateway
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+                         * @todo confirm card networks supported by your site and gateway
+                         */
+                        const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
+
+                        /**
+                         * Card authentication methods supported by your site and your gateway
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+                         * @todo confirm your processor supports Android device tokens for your
+                         * supported card networks
+                         */
+                        const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+
+                        /**
+                         * Identify your gateway and your site's gateway merchant identifier
+                         *
+                         * The Google Pay API response will return an encrypted payment method capable
+                         * of being charged by a supported gateway after payer authorization
+                         *
+                         * @todo check with your gateway on the parameters to pass
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway|PaymentMethodTokenizationSpecification}
+                         */
+                        const tokenizationSpecification = {
+                            type: 'PAYMENT_GATEWAY',
+                            parameters: {
+                                "gateway": "allpayments",
+                                "gatewayMerchantId": "YOUR_GATEWAY_MERCHANT_ID"
+                            }
+                        };
+
+                        /**
+                         * Describe your site's support for the CARD payment method and its required
+                         * fields
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+                         */
+                        const baseCardPaymentMethod = {
+                            type: 'CARD',
+                            parameters: {
+                                allowedAuthMethods: allowedCardAuthMethods,
+                                allowedCardNetworks: allowedCardNetworks
+                            }
+                        };
+
+                        /**
+                         * Describe your site's support for the CARD payment method including optional
+                         * fields
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+                         */
+                        const cardPaymentMethod = Object.assign(
+                            {},
+                            baseCardPaymentMethod,
+                            {
+                                tokenizationSpecification: tokenizationSpecification
+                            }
+                        );
+
+                        /**
+                         * An initialized google.payments.api.PaymentsClient object or null if not yet set
+                         *
+                         * @see {@link getGooglePaymentsClient}
+                         */
+                        let paymentsClient = null;
+
+                        /**
+                         * Configure your site's support for payment methods supported by the Google Pay
+                         * API.
+                         *
+                         * Each member of allowedPaymentMethods should contain only the required fields,
+                         * allowing reuse of this base request when determining a viewer's ability
+                         * to pay and later requesting a supported payment method
+                         *
+                         * @returns {object} Google Pay API version, payment methods supported by the site
+                         */
+                        function getGoogleIsReadyToPayRequest() {
+                            return Object.assign(
+                                {},
+                                baseRequest,
+                                {
+                                    allowedPaymentMethods: [baseCardPaymentMethod]
+                                }
+                            );
+                        }
+
+                        /**
+                         * Configure support for the Google Pay API
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
+                         * @returns {object} PaymentDataRequest fields
+                         */
+                        function getGooglePaymentDataRequest() {
+                            const paymentDataRequest = Object.assign({}, baseRequest);
+                            paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+                            paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+                            paymentDataRequest.merchantInfo = {
+                                // @todo a merchant ID is available for a production environment after approval by Google
+                                // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
+                                // merchantId: '12345678901234567890',
+                                merchantName: 'Apni Dukan'
+                            };
+                            return paymentDataRequest;
+                        }
+
+                        /**
+                         * Return an active PaymentsClient or initialize
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/client#PaymentsClient|PaymentsClient constructor}
+                         * @returns {google.payments.api.PaymentsClient} Google Pay API client
+                         */
+                        function getGooglePaymentsClient() {
+                            if (paymentsClient === null) {
+                                paymentsClient = new google.payments.api.PaymentsClient({
+                                    environment: 'TEST', merchantInfo: {
+                                        merchantName: "Apni Dukan",
+                                        merchantId: "BCR2DN6TT7GI5RK7"
+                                    }
+                                });
+                            }
+                            return paymentsClient;
+                        }
+
+                        /**
+                         * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
+                         *
+                         * Display a Google Pay payment button after confirmation of the viewer's
+                         * ability to pay.
+                         */
+                        function onGooglePayLoaded() {
+                            const paymentsClient = getGooglePaymentsClient();
+                            paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
+                                .then(function (response) {
+                                    if (response.result) {
+                                        addGooglePayButton();
+                                        // @todo prefetch payment data to improve performance after confirming site functionality
+                                        // prefetchGooglePaymentData();
+                                    }
+                                })
+                                .catch(function (err) {
+                                    // show error in developer console for debugging
+                                    console.error(err);
+                                });
+                        }
+
+                        /**
+                         * Add a Google Pay purchase button alongside an existing checkout button
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ButtonOptions|Button options}
+                         * @see {@link https://developers.google.com/pay/api/web/guides/brand-guidelines|Google Pay brand guidelines}
+                         */
+                        function addGooglePayButton() {
+                            const paymentsClient = getGooglePaymentsClient();
+                            const button =
+                                paymentsClient.createButton({
+                                    onClick: onGooglePaymentButtonClicked, buttonColor: 'default',
+                                    buttonType: 'buy',
+                                    buttonSizeMode: 'fill',
+                                });
+                            document.getElementById('container').appendChild(button);
+                        }
+
+                        /**
+                         * Provide Google Pay API with a payment amount, currency, and amount status
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+                         * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+                         */
+                        function getGoogleTransactionInfo() {
+                            return {
+                                countryCode: 'IN',
+                                currencyCode: 'INR',
+                                totalPriceStatus: 'FINAL',
+                                checkoutOption: 'COMPLETE_IMMEDIATE_PURCHASE',
+                                // set to cart total
+                                totalPrice: '1000.00'
+                            };
+                        }
+
+                        /**
+                         * Prefetch payment data to improve performance
+                         *
+                         * @see {@link https://developers.google.com/pay/api/web/reference/client#prefetchPaymentData|prefetchPaymentData()}
+                         */
+                        function prefetchGooglePaymentData() {
+                            const paymentDataRequest = getGooglePaymentDataRequest();
+                            // transactionInfo must be set but does not affect cache
+                            paymentDataRequest.transactionInfo = {
+                                totalPriceStatus: 'FINAL',
+                                currencyCode: 'INR'
+                            };
+                            const paymentsClient = getGooglePaymentsClient();
+                            paymentsClient.prefetchPaymentData(paymentDataRequest);
+                        }
+
+                        /**
+                         * Show Google Pay payment sheet when Google Pay payment button is clicked
+                         */
+                        function onGooglePaymentButtonClicked() {
+                            const paymentDataRequest = getGooglePaymentDataRequest();
+                            paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+
+                            const paymentsClient = getGooglePaymentsClient();
+                            paymentsClient.loadPaymentData(paymentDataRequest)
+                                .then(function (paymentData) {
+                                    // handle the response
+                                    processPayment(paymentData);
+                                })
+                                .catch(function (err) {
+                                    // show error in developer console for debugging
+                                    console.error(err);
+                                });
+                        }
+                        /**
+                         * Process payment data returned by the Google Pay API
+                         *
+                         * @param {object} paymentData response from Google Pay API after user approves payment
+                         * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
+                         */
+                        function processPayment(paymentData) {
+                            // show returned data in developer console for debugging
+                            console.log(paymentData);
+                            // @todo pass payment token to your gateway to process payment
+                            paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+                        }</script>
+                    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
+            </div>
+            <div class="ui horizontal divider">
+                Or
+            </div>
+                    <form action="/payment" method="POST"> 
+        <script
+            src="//checkout.stripe.com/v2/checkout.js"
+            data-key="<%= key %>"
+                    class="stripe-button"
+                    data-amount="100000"
+                    data-currency="inr"
+                    data-name="Apni Dukan"
+                    data-description="Buy Apni Dukan to reactivate your account"
+                    data-image="https://cdn1.iconfinder.com/data/icons/business-and-finance-1-4/130/14-512.png"
+                    data-locale="auto" >
+                    </script>
+                    <button type="submit" class="btn btn-primary btn-lg button-purchase" id="checkout-button">Pay
+                        ₹1000 by Card</button>
+                    <script>
+                        document.getElementsByClassName('stripe-button-el')[0].style.display = 'none';
+                    </script>
+                    </form>
+</body>
+
+</html>

@@ -16,7 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css">
-    <title><%= grocery.cartTitle %> | Apni Dukan</title>
+    <title>Choose Shopkeeper - Apni Dukan</title>
 </head>
 
 <body>
@@ -31,25 +31,22 @@
             -moz-background-size: cover;
             -o-background-size: cover;
             background-size: cover;
+            font-family: 'Lemon', cursive;
         }
 
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
+        .draftInfo {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
         }
 
-        td,
-        th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
+        .draftInfo1 {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            max-width: 100%;
         }
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-        
         /* Full-width input fields */
         input[type=text],
         input[type=password],
@@ -204,6 +201,18 @@
             }
 
         }
+
+        #myInput {
+            box-sizing: border-box;
+            background-image: url('');
+            background-position: 14px 12px;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            padding: 14px 20px 12px 45px;
+            background-color: white;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
     </style>
     <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
         <div class="container-fluid">
@@ -224,7 +233,7 @@
                     <%}else{%>
                     <% if (currentUser.isShopkeeper == false) { %>
                     <li>
-                        <a href="/carts/new" style="font-family: 'Lemon', cursive;">New Cart</a>
+                        <a href="/shopkeepers" style="font-family: 'Lemon', cursive;"> See your Local Shopkeepers</a>
                     </li>
                     <li>
                         <a href="/buyer/drafts/carts" style="font-family: 'Lemon', cursive;">Drafts</a>
@@ -244,107 +253,57 @@
             </div>
         </div>
     </nav>
-    <div class="container" align="center" style="background-color: white; border-radius: 10px;">
-       <h1><%= grocery.cartTitle %> </h1>
-                    <hr>
-                    <p><%= grocery.cartDescription %> </p>
-                    <hr>
-                    <h3>Cart Items</h3>
-                    <div align="left">
-                        <table>
-                            <tr>
-                                <th>Grocery</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <% if (grocery.groceryBill != 0) { %>
-                                <th>Rate</th>
-                                <th>Price</th>
-                                <% } %>
-                            </tr>
-                            <% for( let i = 0; i < grocery.groceryName.length; i++ ) { %>
-                            <tr>
-                                <td>
-                                    <p><%= grocery.groceryName[i] %></p>
-                                </td>
-                                <td>
-                                    <p><%= grocery.groceryQuantity[i] %></p>
-                                </td>
-                                <td>
-                                    <p><%= grocery.groceryUnit[i] %></p>
-                                </td>
-                                <% if (grocery.groceryBill != 0) { %>
-                                <td>
-                                    <p>&#8377;
-                                        <%=parseInt(grocery.groceryBill[i]) /  parseInt(grocery.groceryQuantity[i])%>
-                                        per <%= grocery.groceryUnit[i] %> </p>
-                                </td>
-                                <td>
-                                    <p>&#8377;<%=grocery.groceryBill[i] %></p>
-                                </td>
-                                <% } %>
-                            </tr>
-                            <% } %>
-                            <% if (grocery.groceryBill != 0) { %>
-                            <tr>
-                                <td>
-                                    <p>Total: </p>
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                    <p>&#8377;<%= total %></p>
-                                </td>
-                            </tr>
-                            <% } %>
-                        </table>
-                        <hr>
-                        <h1>Status</h1>
-                        <% if (grocery.isCompleted == false && grocery.groceryBill != 0) { %>
-                        <p>Your order will be delivered in <b><%= grocery.deliver %>*!</b> </p>
-                        <% } else if(grocery.isCompleted) { %>
-                        <p>Your order is completed.</p>
-                        <% } else { %>
-                        <p>Your order will be checked by the shopkeeper!</p>
-                        <% } %>
-                        <hr>
-                            <button class="btn btn-danger btn-lg" onclick="document.getElementById('id02').style.display='block'; document.getElementById('form1').setAttribute('action', '/buyer/posts/carts/<%= grocery._id%>/remove?_method=DELETE'); document.getElementById('removeCart').innerHTML='Do you really want to permanently remove the cart <%= grocery.cartTitle%>?';">Remove</button><br><br>
-
+   <div style="border: 1px solid #ddd; margin: 10px; border-radius: 10px; padding-bottom: 10px; padding-right: 10px; padding-left: 10px">
+        <h2 align="center">Search User: </h2>
+        <div class="draftInfo1" style="background-color: white;">
+                <input autocomplete="off" type="text" class="form-control" id="myInput" placeholder="Search By User_ID (ex. 602233e0a432d30cbc63bf71)" name="id">
+                <a class="btn btn-default btn-block btn-lg"
+                onclick="document.getElementById('id02').style.display='block'; document.getElementById('form1').setAttribute('action', `/buyer/posts/carts/<%= id %>/${document.getElementById('myInput').value}`); document.getElementById('postCart').innerHTML=`Do you want to post this cart to shopkeeper #${document.getElementById('myInput').value}?`;">Search</a>
+        </div>
+    </div>
+    <hr>
+    <% for( let i = 0; i < shopkeepers.length; i++ ) { %>
+                    <div class="col-lg-3">
+                        <div class="draftInfo" style="background-color: white;" align="center">
+                            <p style="font-size:large;"><%= shopkeepers[i].fullname %> </p>
+                            <p style="font-size:small;"><em style="color: #a1a1a1">#<%= shopkeepers[i].id %></em></p>
+                            <a href="tel:<%= shopkeepers[i].phone %>" class="btn btn-primary btn-block">Call
+                                <%= shopkeepers[i].fullname %></a>
+                            <hr>
+                            <p style="font-size:small; border: 1px solid #a1a1a1; padding: 10px; border-radius: 10px;">
+                                User: <%= shopkeepers[i].username %></p>
+                            <button class="btn btn-primary btn-md btn-block"
+                                onclick="document.getElementById('id02').style.display='block'; document.getElementById('form1').setAttribute('action', '/buyer/posts/carts/<%= id %>/<%= shopkeepers[i].id %>'); document.getElementById('postCart').innerHTML='Do you want to post this cart to shopkeeper <%= shopkeepers[i].fullname%>?';">Post Cart</button>
                             <div id="id02" class="modal" align="center">
                                 <span onclick="document.getElementById('id02').style.display='none'" class="close"
                                     title="Close Modal">&times;</span>
-                                <form class="modal-content" id="form1" method="POST">
+                                <form class="modal-content" id="form1" action="/buyer/posts/carts/<%= id %>/<%= shopkeepers[i].id %>" method="POST" autocomplete="off">
                                     <div class="container">
-                                        <h1>Remove?</h1>
-                                        <p id="removeCart"></p>
+                                        <h1>Post Cart?</h1>
+                                        <p id="postCart"><%= shopkeepers[i].username %></p>
                                         <hr>
                                         <div class="clearfix">
                                             <button type="button"
                                                 onclick="document.getElementById('id02').style.display='none'"
-                                                class="signupbtn">Cancel</button>
-                                            <button type="submit" class="cancelbtn">Remove Cart</button>
+                                                class="cancelbtn">Cancel</button>
+                                            <button type="submit" class="signupbtn">Post Cart</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
+                        </div>
                     </div>
-            </div>
-            <script>
-                var login = document.getElementById('id02');
+                    <% } %>
+                    <script>
+                        var login = document.getElementById('id02');
 
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function (event) {
-                    if (event.target == login) {
-                        login.style.display = "none";
-                    }
-                }
-            </script>
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function (event) {
+                            if (event.target == login) {
+                                login.style.display = "none";
+                            }
+                        }
+                    </script>
 </body>
 
 </html>

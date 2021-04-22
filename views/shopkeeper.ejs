@@ -28,6 +28,9 @@
             background-size: cover;
             font-family: 'Lemon', cursive; 
         }
+        .shopkeeper:hover{
+            text-decoration:none;
+        }
     </style>
     <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
         <div class="container-fluid">
@@ -41,11 +44,17 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav navbar-right mr-auto">
                     <%if(!currentUser){%>
+                        <li>
+                            <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
+                        </li>
                         <li><a href="/login" style="font-family: 'Lemon', cursive;">Login</a></li>
                         <li>
                             <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
                         </li>
                     <%}else{%>
+                        <li>
+                            <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
+                        </li>
                         <li>
                             <a href="/shopkeeper/orders" style="font-family: 'Lemon', cursive;">Orders</a>
                         </li>
@@ -66,7 +75,7 @@
             </div>
         </div>
     </nav>
-    <h1 style="margin: 10px" align="center">Hi, <%= currentUser.fullname %> </h1>
+    <h1 style="margin: 10px" align="center">Hi, <%= currentUser.fullname %> <a href="/profile/me" class="shopkeeper"><small style="font-size: 15px">Shopkeeper Account</small></a></h1>
     <hr>
     <div class="contaner" style="background-color: white; margin: 10px; padding: 10px; border-radius: 10px;">
         <h2 style="margin: 10px" align="center">Introduction to Apni Dukan</h2><hr>
@@ -79,6 +88,15 @@
             To see all your completed orders click the Completed orders button in the navigation bar.
         </p>
     </div><hr>
+    <div align="center" class="contaner" style="background-color: white; margin: 10px; padding: 10px; border-radius: 10px;">
+        <h2 style="margin: 10px" align="center">Order Status:</h2><hr>
+        <div style="border: 1px solid #a1a1a1; border-radius: 10px">
+            <% for( let i = 0; i < user.grocery.length; i++ ) { %>
+                 <h4>Orders: <div style="height: 20px;" class="badge badge-pill badge-primary"> <%= user.grocery.length %> </div></h4>
+            <% } %>
+        </div><hr>
+    </div>
+    <hr>
     <div class="contaner" style="background-color: white; margin: 10px; padding: 10px; border-radius: 10px;">
         <h2 style="margin: 10px" align="center">Links to start</h2><hr>
         <p style="margin: 10px" align="center">

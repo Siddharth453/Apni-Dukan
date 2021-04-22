@@ -13,7 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css">
-    <title>User <%= user.fullname %>   | Apni Dukan</title>
+    <title>Incomplete Orders | Apni Dukan</title>
 </head>
 <body>
     <style>
@@ -31,7 +31,6 @@
             padding: 10px;
             margin: 5px;
             border-radius: 5px;
-            border: 1px solid grey;
         }
     </style>
     <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
@@ -51,17 +50,15 @@
                             <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
                         </li>
                     <%}else{%>
-                        <% if (currentUser.isShopkeeper == false) { %>
-                            <li>
-                                <a href="/shopkeepers" style="font-family: 'Lemon', cursive;"> See your Local Shopkeepers</a>
-                            </li>
-                            <li>
-                                <a href="/buyer/drafts/carts" style="font-family: 'Lemon', cursive;">Drafts</a>
-                            </li>
-                            <li>
-                                <a href="/buyer/posts/carts" style="font-family: 'Lemon', cursive;">Posted Carts</a>
-                            </li>
-                        <% } %>
+                        <li>
+                            <a href="/shopkeeper/orders" style="font-family: 'Lemon', cursive;">Orders</a>
+                        </li>
+                        <li>
+                            <a href="/shopkeeper/orders/incomplete" style="font-family: 'Lemon', cursive;">Incomplete orders</a>
+                        </li>
+                        <li>
+                            <a href="/shopkeeper/orders/complete" style="font-family: 'Lemon', cursive;">Completed orders</a>
+                        </li>
                         <li>
                             <a href="" style="font-family: 'Lemon', cursive;">Signed in as <%=currentUser.username%></a>
                         </li>
@@ -73,17 +70,22 @@
             </div>
         </div>
     </nav>
-    <div class="draftInfo" style="background-color: white;" align="center">
-        <h1><%= user.fullname %></h1>
-        <p><em style="color:#a1a1a1">#<%= user.id %></em></p>
-        <a href="tel:<%= user.phone %>" class="btn btn-primary btn-lg btn-block">Call <%= user.fullname %> </a><br>
-        <div style="border: 1px solid #a1a1a1; padding: 10px; border-radius: 10px;">
-            <h4>Shop Address: <%= user.address %></h4> <hr> <h4> Pin Code: <%= user.pin %></h4>
-        </div>
-        <hr>
-        <p style="border: 1px solid #a1a1a1; padding: 10px; border-radius: 10px;">Username: <%= user.username %></p>
-        <a href="/users/<%= user.id %>/carts/new" class="btn btn-primary btn-lg btn-block">Create New Cart</a>
-        <hr>
-    </div>
+        <% grocery.grocery.reverse().forEach(function(grocery){ %>
+            <% if (grocery.groceryUser.id == currentUser.id || currentUser.isShopkeeper) { %>
+                <% if (grocery.isCompleted == false) { %>
+                <div class="col-lg-3">
+                    <div class="draftInfo" style="background-color: white;" align="center">
+                        <p style="font-size:large;"><%= grocery.cartTitle %> </p>
+                        <hr>
+                        <p style="font-size:small;"><%= grocery.cartDescription.substring(0, 25); %>... </p>
+                        <hr>
+                        <p><em>Created by <%= grocery.groceryUser.fullname %> on <%= moment(grocery.created).format('L') %></em></p>
+                        <hr>
+                        <a href="/shopkeeper/orders/<%= grocery._id %>"><button class="btn btn-primary btn-md">Read More</button></a>
+                    </div>
+                </div>
+            <% } %> 
+            <% } %>
+        <% }) %>
 </body>
 </html>

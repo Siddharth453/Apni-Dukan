@@ -63,12 +63,18 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav navbar-right mr-auto">
                     <%if(!currentUser){%>
+                        <li>
+                            <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
+                        </li>
                         <li><a href="/login" style="font-family: 'Lemon', cursive;">Login</a></li>
                         <li>
                             <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
                         </li>
                     <%}else{%>
                         <% if (currentUser.isShopkeeper == false) { %>
+                            <li>
+                                <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
+                            </li>
                             <li>
                                 <a href="/shopkeepers" style="font-family: 'Lemon', cursive;"> See your Local Shopkeepers</a>
                             </li>

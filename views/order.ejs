@@ -70,20 +70,20 @@
             </div>
         </div>
     </nav>
-    <% for( let i = 0; i < grocery.length; i++ ) { %>
-        <% if (grocery[i].groceryUser.id == currentUser.id || currentUser.isShopkeeper) { %>
+    <% grocery.grocery.reverse().forEach(function(grocery){ %>
+        <% if (grocery.groceryUser.id == currentUser.id || currentUser.isShopkeeper) { %>
             <div class="col-lg-3">
                 <div class="draftInfo" style="background-color: white;" align="center">
-                    <p style="font-size:large;"><%= grocery[i].cartTitle %> </p>
+                    <p style="font-size:large;"><%= grocery.cartTitle %> </p>
                     <hr>
-                    <p style="font-size:small;"><%= grocery[i].cartDescription.substring(0, 25); %>... </p>
+                    <p style="font-size:small;"><%= grocery.cartDescription.substring(0, 25); %>... </p>
                     <hr>
-                    <p><em>Created by <%= grocery[i].groceryUser.fullname %> on <%= moment(grocery[i].created).format('L') %></em></p>
+                    <p><em>Created by <%= grocery.groceryUser.fullname %> on <%= moment(grocery.created).format('L') %></em></p>
                     <hr>
-                    <a href="/shopkeeper/orders/<%= grocery[i]._id %>"><button class="btn btn-primary btn-md">Read More</button></a>
+                    <a href="/shopkeeper/orders/<%= grocery._id %>"><button class="btn btn-primary btn-md">Read More</button></a>
                 </div>
             </div>
         <% } %>
-    <% } %>
+    <% }) %>
 </body>
 </html>

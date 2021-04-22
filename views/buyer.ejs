@@ -28,6 +28,9 @@
             background-size: cover;
             font-family: 'Lemon', cursive;
         }
+        .customer:hover{
+            text-decoration: none;
+        }
     </style>
     <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
         <div class="container-fluid">
@@ -41,12 +44,18 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav navbar-right mr-auto">
                     <%if(!currentUser){%>
+                        <li>
+                            <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
+                        </li>
                         <li><a href="/login" style="font-family: 'Lemon', cursive;">Login</a></li>
                         <li>
                             <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
                         </li>
                     <%}else{%>
                         <% if (currentUser.isShopkeeper == false) { %>
+                            <li>
+                                <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
+                            </li>
                             <li>
                                 <a href="/shopkeepers" style="font-family: 'Lemon', cursive;"> See your Local Shopkeepers</a>
                             </li>
@@ -68,7 +77,7 @@
             </div>
         </div>
     </nav>
-    <h1 style="margin: 10px" align="center">Hi, <%= currentUser.fullname %> </h1>
+    <h1 style="margin: 10px" align="center">Hi, <%= currentUser.fullname %> <a href="/profile/me" class="customer"><small style="font-size: 15px">Customer Account</small></a> </h1>
     <hr>
     <div class="contaner" style="background-color: white; margin: 10px; padding: 10px; border-radius: 10px;">
         <h2 style="margin: 10px" align="center">Introduction to Apni Dukan</h2><hr>
@@ -76,7 +85,7 @@
             Here you can contact with your local shopkeeper and make orders.
             Just By creating a cart and saving it as a draft, you can edit and remove it whenever you want.
             When you are completed just click Post Cart and your cart is posted to the shopkeeper.
-            To create a new Cart click on the New Cart Button on the navigation bar.
+            To create a new Cart click on the Create New Cart Button in the Links to Start section.
         </p>
     </div><hr>
     <div class="contaner" style="background-color: white; margin: 10px; padding: 10px; border-radius: 10px;">

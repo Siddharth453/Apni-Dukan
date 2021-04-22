@@ -16,7 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css">
-    <title>Home - Apni Dukan</title>
+    <title>Contact Us - Apni Dukan</title>
 </head>
 
 <body>
@@ -33,13 +33,12 @@
             background-size: cover;
         }
 
-        .jumbotron {
-            background-image: url('https://png.pngtree.com/thumb_back/fh260/back_our/20190625/ourmid/pngtree-simple-atmosphere-online-shopping-hand-closeup-background-poster-image_261322.jpg');
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            -o-background-size: cover;
-            background-size: cover;
-            color: white;
+        .container.login{
+            max-width: 400px;
+            padding: 10px;
+            background: white;
+            border: 1px solid gray;
+            border-radius: 10px;
         }
     </style>
     <nav class="navbar navbar-default navbar-expand-md navbar-light bg-light">
@@ -54,14 +53,14 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav navbar-right mr-auto">
                     <%if(!currentUser){%>
-                    <li>
+                     <li>
                         <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
-                    </li>
+                    </li>    
                     <li><a href="/login" style="font-family: 'Lemon', cursive;">Login</a></li>
                     <li>
                         <a href="/register" style="font-family: 'Lemon', cursive;">Sign Up</a>
                     </li>
-                    <%}else{%>
+                    <% } else { %>
                     <% if (currentUser.isShopkeeper == false) { %>
                     <li>
                         <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
@@ -75,35 +74,54 @@
                     <li>
                         <a href="/buyer/posts/carts" style="font-family: 'Lemon', cursive;">Posted Carts</a>
                     </li>
-                    <% } %>
-                    <li>
-                        <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
-                    </li>
+                    <% } else { %>
+                        <li>
+                            <a href="/contact" style="font-family: 'Lemon', cursive;">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="/shopkeeper/orders" style="font-family: 'Lemon', cursive;">Orders</a>
+                        </li>
+                        <li>
+                            <a href="/shopkeeper/orders/incomplete" style="font-family: 'Lemon', cursive;">Incomplete orders</a>
+                        </li>
+                        <li>
+                            <a href="/shopkeeper/orders/complete" style="font-family: 'Lemon', cursive;">Completed orders</a>
+                        </li>
+                    <% } %> 
                     <li>
                         <a href="" style="font-family: 'Lemon', cursive;">Signed in as <%=currentUser.username%></a>
                     </li>
                     <li>
                         <a href="/logout" style="font-family: 'Lemon', cursive;">Logout</a>
                     </li>
-                    <%}%>
+                    <% } %>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="jumbotron">
-        <div align="center">
-            <h1>Welcome!</h1>
-        </div>
-        <hr>
-        <p>
-            Apni Dukan is an application where you and your local shopkeeper can contact together, you can order your things easily and the shopkeeper can also check it easily.
-            The Shopkeeper could generate each order's bill easily and almost automatically and set a time to deliver.
-            both the shopkeeper and your's<br> data is secured by the application. Try it today, just click the Register Button to Sign Up!<br>
-            <div align="center">
-                <a href="/login"><button class="btn btn-primary btn-lg">Login</button></a>
-                <a href="/register"><button class="btn btn-primary btn-lg">Register</button></a>
+    <%if(!success.length == 0){%>
+        <div class="container">
+            <div class="alert alert-success" role="alert">
+                <p><%=success%></p>
             </div>
-        </p>
+        </div>
+    <%}%>
+    <hr>
+    <div class="container login" align="center">
+        <form action="/contact" method="POST">
+            <h1>Contact Us</h1>
+            <hr>
+            <div class="left" align="left">
+                <label for="email">Email:</label>
+                <input class="form-control" type="text" autocomplete="off" placeholder="Your Email.." name="email" id="email"><br>
+                <label for="name">Name:</label>
+                <input class="form-control" type="text" placeholder="Your Name.." name="name" id="name"><br>
+                <label for="message">Message:</label>
+                <textarea placeholder="Type Your Message.." name="message" id="message" class="form-control"></textarea><br>
+                <button class="btn btn-success btn-lg btn-block">Submit</button>
+            </div>
+        </form>
     </div>
+    <hr>
 </body>
 </html>

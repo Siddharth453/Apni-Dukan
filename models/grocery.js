@@ -14,9 +14,14 @@ const grocerySchema = new mongoose.Schema({
 			ref: 'User'
 		},
 		fullname: String,
-		phone: String
+		phone: String,
+		address: String,
+		country: String,
+		pin: String,
+		email: String
 	},
 	deliver: String,
+	groceryShopkeeper: mongoose.Schema.Types.ObjectId,
 	isCompleted: { type: Boolean, default: false },
 	isPaid: { type: Boolean, default: false },
 	created: { type: Date, default: Date.now() }

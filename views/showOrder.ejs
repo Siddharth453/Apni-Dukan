@@ -193,6 +193,10 @@
                     </div>
                     <% } %>
                     <hr>
+                    <h3>Delivery</h3>
+                    <hr>
+                    <p style="border: 1px solid #a1a1a1; padding: 10px;">You have to Deliver this order to <%= grocery.groceryUser.fullname %> <b><%= grocery.groceryUser.address %></b> <br> Pin Code: <%= grocery.groceryUser.pin %></p>
+                    <hr>
                     <h3>Call</h3>
                     <hr>
                     <h4><a href="tel:<%= grocery.groceryUser.phone %> " class="btn btn-primary btn-lg btn-block">Call
