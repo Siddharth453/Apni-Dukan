@@ -24,4 +24,4 @@ B) __For Shopkeeper__:<br><br>
 
 II) 📖 Guides: <br><br>
 A) __For Buyer__:<br><br>
-1) <img href="https://user-images.githubusercontent.com/67679454/115693437-8c98dd80-a37d-11eb-8886-b040f39680db.png"><br>To create a Draft click on Create new Cart > *add your groceries* > Save as Draft. and to Post Apni Dukan > You Drafts > *choose your draft* > Post Cart > *choose you shopkeeper* > Confirm.
+1) <img src="https://user-images.githubusercontent.com/67679454/115693437-8c98dd80-a37d-11eb-8886-b040f39680db.png"><br>To create a Draft click on Create new Cart > *add your groceries* > Save as Draft. and to Post Apni Dukan > You Drafts > *choose your draft* > Post Cart > *choose you shopkeeper* > Confirm.
