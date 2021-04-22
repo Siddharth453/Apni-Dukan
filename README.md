@@ -21,3 +21,5 @@ B) __For Shopkeeper__:<br><br>
 5) You can change the status of an Order of your customer from Paid to Unpaid.
 6) You can make a call directly through your application to the customer.
 7) It will show you the Address where to deliver your customer's Order.
+
+II)
