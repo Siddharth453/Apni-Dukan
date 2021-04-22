@@ -1,7 +1,7 @@
 # Hi, Apni Dukan is here!
 Apni Dukan is a Global Shopping App where you can contact your local shopkeeper and order things from them!
 
-This Application is created by Siddharth Kumar and released on 22/04/2021 and is available for Web and Android both.
+This Application is created by Siddharth Kumar and released on 22/04/2021 and is available for Web.
 
 For Web Go to <a href="https://apni-dukan1.herokuapp.com">https://apni-dukan1.herokuapp.com</a>.
 To Register Go to <a href="https://apni-dukan1.herokuapp.com/register">https://apni-dukan1.herokuapp.com/register</a> and register there for free.
@@ -32,3 +32,12 @@ B) __For Shopkeeper__:<br><br>
 2) To Generate a Bill Online of your customer's cart go to Apni Dukan > See Your Orders > *choose your order and click __Read More__* > Generate Bill > Generate Bill
 3) To Change Delivery Time of your customer's cart go to Apni Dukan > See Your Orders > *choose your order and click __Read More__* > Change Delivery Time > Change Delivery Time
 4) To Set Delivery Time  of your customer's cart go to Apni Dukan > See Your Orders > *choose your order and click __Read More__* > Generate Bill > Change Delivery Time > Generate Bill
+5) To make a call directly through your application to the customer go to Apni Dukan > See Your Orders > *choose your order and click __Read More__* > Click "Call *customer name*"
+
+## 📈 Status:
+Working, go to <a href="https://apni-dukan1.herokuapp.com">https://apni-dukan1.herokuapp.com</a>.
+
+<hr>
+<h6>Thanks</h6>
+<h5>Siddharth Kumar</h5>
+<p align="right">Version 1.0.0<p>
