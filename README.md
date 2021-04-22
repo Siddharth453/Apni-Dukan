@@ -24,4 +24,11 @@ B) __For Shopkeeper__:<br><br>
 
 II) 📖 Guides: <br><br>
 A) __For Buyer__:<br><br>
-1) <img src="https://user-images.githubusercontent.com/67679454/115693437-8c98dd80-a37d-11eb-8886-b040f39680db.png"><br>To create a Draft click on Create new Cart > *add your groceries* > Save as Draft. and to Post Apni Dukan > You Drafts > *choose your draft* > Post Cart > *choose you shopkeeper* > Confirm.
+1) To create a Draft click on Create new Cart > *add your groceries* > Save as Draft. and to Post Apni Dukan > You Drafts > *choose your draft* > Post Cart > *choose you shopkeeper* > Confirm.
+2) You can edit your address by going to Apni Dukan > My Profile > Update Pin Code; Update Address; Update Country.
+3) You can directly post your Cart by going to Apni Dukan > See your Local Shopkeepers > *choose any shopkeeper* > Create New Cart > Post > Confirm<br><br>
+B) __For Shopkeeper__:<br><br>
+1) To check a customer's cart go to Apni Dukan > See Your Orders > *choose your order and click __Read More__*
+2) To Generate a Bill Online of your customer's cart go to Apni Dukan > See Your Orders > *choose your order and click __Read More__* > Generate Bill > Generate Bill
+3) To Change Delivery Time of your customer's cart go to Apni Dukan > See Your Orders > *choose your order and click __Read More__* > Change Delivery Time > Change Delivery Time
+4) To Set Delivery Time  of your customer's cart go to Apni Dukan > See Your Orders > *choose your order and click __Read More__* > Generate Bill > Change Delivery Time > Generate Bill
